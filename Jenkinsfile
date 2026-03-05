@@ -5,19 +5,19 @@ pipeline {
 
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/yourrepo/todo-cicd.git'
+                git 'https://github.com/Gayathrijayaprakash2001/mini-Devops.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t yourdockerhub/todo-app .'
+                sh 'docker build -t tesseris/mini-devops-app .'
             }
         }
 
-        stage('Push Image') {
+        stage('Push Docker Image') {
             steps {
-                sh 'docker push yourdockerhub/todo-app'
+                sh 'docker push tesseris/mini-devops-app'
             }
         }
 

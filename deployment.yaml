@@ -1,19 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-app
+  name: mini-devops
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: todo
+      app: mini-devops
   template:
     metadata:
       labels:
-        app: todo
+        app: mini-devops
     spec:
+
       containers:
-      - name: todo-container
-        image: yourdockerhub/todo-app:latest
+      - name: mini-devops-container
+        image: mini-devops-app
+        imagePullPolicy: Never
         ports:
         - containerPort: 5000
