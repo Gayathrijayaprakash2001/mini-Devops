@@ -29,26 +29,27 @@ app = Flask(__name__)
 
 tasks = []
 
-HTML = """
+html = """
 <!DOCTYPE html>
 <html>
 <head>
 <title>To-Do List</title>
 </head>
 <body>
-<h2>My To-Do List</h2>
+
+<h1>My To-Do List</h1>
 
 <form method="POST" action="/add">
-    <input type="text" name="task" placeholder="Enter a task" required>
-    <button type="submit">Add</button>
+<input type="text" name="task" placeholder="Enter a task">
+<button type="submit">Add</button>
 </form>
 
 <ul>
 {% for task in tasks %}
-    <li>
-        {{task}}
-        <a href="/delete/{{loop.index0}}">Delete</a>
-    </li>
+<li>
+{{task}}
+<a href="/delete/{{loop.index0}}">Delete</a>
+</li>
 {% endfor %}
 </ul>
 
@@ -58,8 +59,7 @@ HTML = """
 
 @app.route("/")
 def home():
-    return render_template_string(HTML, tasks=tasks)
-
+    return render_template_string(html, tasks=tasks)
 
 @app.route("/add", methods=["POST"])
 def add():
@@ -67,12 +67,10 @@ def add():
     tasks.append(task)
     return redirect("/")
 
-
 @app.route("/delete/<int:index>")
 def delete(index):
     tasks.pop(index)
     return redirect("/")
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
