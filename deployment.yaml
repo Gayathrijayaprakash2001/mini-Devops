@@ -12,10 +12,9 @@ spec:
       labels:
         app: mini-devops
     spec:
-
       containers:
-      - name: mini-devops-container
-        image: mini-devops-app
-        imagePullPolicy: Never
+      - name: mini-devops
+        image: tesseris/mini-devops-app:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
