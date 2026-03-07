@@ -23,75 +23,55 @@
 # if __name__ == "__main__":
 #     app.run(host="0.0.0.0", port=5000)
 
-from flask import Flask, request, jsonify
+from flask import Flask, render_template_string, request, redirect
 
 app = Flask(__name__)
 
 tasks = []
-task_id = 1
+
+HTML = """
+<!DOCTYPE html>
+<html>
+<head>
+<title>To-Do List</title>
+</head>
+<body>
+<h2>My To-Do List</h2>
+
+<form method="POST" action="/add">
+    <input type="text" name="task" placeholder="Enter a task" required>
+    <button type="submit">Add</button>
+</form>
+
+<ul>
+{% for task in tasks %}
+    <li>
+        {{task}}
+        <a href="/delete/{{loop.index0}}">Delete</a>
+    </li>
+{% endfor %}
+</ul>
+
+</body>
+</html>
+"""
+
+@app.route("/")
+def home():
+    return render_template_string(HTML, tasks=tasks)
 
 
-# Get all tasks
-@app.route("/", methods=["GET"])
-def get_tasks():
-    return jsonify(tasks)
-
-
-# Get single task
-@app.route("/task/<int:id>", methods=["GET"])
-def get_task(id):
-    for task in tasks:
-        if task["id"] == id:
-            return jsonify(task)
-    return {"error": "Task not found"}, 404
-
-
-# Add task
 @app.route("/add", methods=["POST"])
-def add_task():
-    global task_id
-
-    data = request.json
-    title = data.get("title")
-    description = data.get("description", "")
-
-    new_task = {
-        "id": task_id,
-        "title": title,
-        "description": description,
-        "completed": False
-    }
-
-    tasks.append(new_task)
-    task_id += 1
-
-    return {"message": "Task added", "task": new_task}
+def add():
+    task = request.form.get("task")
+    tasks.append(task)
+    return redirect("/")
 
 
-# Update task
-@app.route("/update/<int:id>", methods=["PUT"])
-def update_task(id):
-    data = request.json
-
-    for task in tasks:
-        if task["id"] == id:
-            task["title"] = data.get("title", task["title"])
-            task["description"] = data.get("description", task["description"])
-            task["completed"] = data.get("completed", task["completed"])
-            return {"message": "Task updated", "task": task}
-
-    return {"error": "Task not found"}, 404
-
-
-# Delete task
-@app.route("/delete/<int:id>", methods=["DELETE"])
-def delete_task(id):
-    for task in tasks:
-        if task["id"] == id:
-            tasks.remove(task)
-            return {"message": "Task deleted"}
-
-    return {"error": "Task not found"}, 404
+@app.route("/delete/<int:index>")
+def delete(index):
+    tasks.pop(index)
+    return redirect("/")
 
 
 if __name__ == "__main__":
