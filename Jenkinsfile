@@ -15,6 +15,14 @@ pipeline {
             }
         }
 
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    bat 'docker login -u %USER% -p %PASS%'
+                }
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
                 bat 'docker push tesseris/mini-devops-app'
